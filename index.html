@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dipanshu Kale — Mechanical Engineering</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --white:    #ffffff;
+  --off:      #f0f4fb;
+  --accent:   #1d4ed8;
+  --accent-h: #1e40af;
+  --accent2:  #06b6d4;
+  --dark:     #04102a;
+  --dark2:    #071630;
+  --dark3:    #0a1f45;
+  --text-d:   #07142b;
+  --text-m:   #3a5070;
+  --text-dim: #7a95b8;
+  --bl:       rgba(29,78,216,0.12);
+  --glow:     rgba(29,78,216,0.28);
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--white);
+  color: var(--text-d);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* ── SCROLL REVEAL ── */
+.rev {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(.22,.68,0,1.05),
+              transform 0.7s cubic-bezier(.22,.68,0,1.05);
+}
+.rev.on { opacity: 1; transform: none; }
+.rev.d1{transition-delay:.08s}.rev.d2{transition-delay:.18s}
+.rev.d3{transition-delay:.30s}.rev.d4{transition-delay:.44s}
+.rev.d5{transition-delay:.58s}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 300;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 60px; height: 64px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--bl);
+  transition: box-shadow 0.3s;
+}
+nav.scrolled { box-shadow: 0 4px 28px rgba(29,78,216,0.08); }
+.nav-logo { font-size: 14.5px; font-weight: 800; letter-spacing: 0.06em; color: var(--text-d); text-transform: uppercase; }
+.nav-logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 34px; list-style: none; }
+.nav-links a {
+  font-size: 13px; font-weight: 500;
+  color: var(--text-m); text-decoration: none;
+  letter-spacing: 0.01em; position: relative; transition: color 0.2s;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:-3px; left:0;
+  width:0; height:2px; border-radius:2px; background: var(--accent);
+  transition: width 0.25s;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { width: 100%; }
+
+/* ══════════════════════════════════════
+   HERO — full gradient, no hard edges
+   ══════════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(
+    110deg,
+    #f0f4fb 0%,
+    #dce7f7 22%,
+    #b8cef4 38%,
+    #6395e8 52%,
+    #2255c4 64%,
+    #0d2f7a 78%,
+    #04102a 100%
+  );
+}
+
+/* Gradient wash that fades the bottom of hero into the page */
+#hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 160px;
+  z-index: 15;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    #ffffff 100%
+  );
+  pointer-events: none;
+}
+
+/* Subtle grid only on dark half */
+.hero-grid {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-size: 48px 48px;
+  /* Fade grid in from center-right */
+  -webkit-mask-image: linear-gradient(110deg, transparent 30%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,1) 75%);
+  mask-image: linear-gradient(110deg, transparent 30%, rgba(0,0,0,0.6) 55%, rgba(0,0,0,1) 75%);
+}
+
+/* Deep radial glow on right */
+.hero-glow {
+  position: absolute; z-index: 2; pointer-events: none;
+  right: 8%; top: 50%; transform: translate(40%, -50%);
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(29,78,216,0.22) 0%, transparent 68%);
+}
+
+/* Circuit lines bg decoration */
+.hero-circuit {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  opacity: 0.06;
+  background-image:
+    linear-gradient(90deg, rgba(94,173,247,1) 1px, transparent 1px),
+    linear-gradient(rgba(94,173,247,1) 1px, transparent 1px);
+  background-size: 80px 80px;
+  background-position: 20px 20px;
+  -webkit-mask-image: linear-gradient(110deg, transparent 42%, rgba(0,0,0,1) 70%);
+  mask-image: linear-gradient(110deg, transparent 42%, rgba(0,0,0,1) 70%);
+}
+
+.hero-inner {
+  position: relative; z-index: 10;
+  width: 100%; display: flex; align-items: center;
+  padding-top: 64px;
+  padding-bottom: 120px; /* space for the white bottom fade */
+}
+
+.hero-left {
+  flex: 0 0 50%; max-width: 50%;
+  padding: 90px 60px 90px 70px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+
+.hero-right {
+  flex: 0 0 50%; max-width: 50%;
+  display: flex; align-items: center; justify-content: center;
+  padding: 80px 40px;
+  position: relative;
+}
+
+/* Tag line */
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.2em; color: var(--accent);
+  text-transform: uppercase; margin-bottom: 18px;
+}
+.hero-tag::before { content:''; display:block; width:26px; height:1px; background: var(--accent); }
+
+.hero-name {
+  font-size: clamp(48px, 5.8vw, 82px);
+  font-weight: 800; line-height: 0.94;
+  letter-spacing: -0.035em;
+  color: var(--text-d);
+}
+.hero-name .blue { color: var(--accent); }
+
+.hero-role {
+  margin-top: 18px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 15px; color: var(--text-m); font-weight: 500;
+}
+.hero-pip {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent2); flex-shrink: 0;
+  box-shadow: 0 0 8px 3px rgba(6,182,212,0.55);
+}
+
+.hero-bar { margin: 22px 0; width: 46px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+
+.hero-desc { font-size: 15px; color: var(--text-m); line-height: 1.88; max-width: 380px; }
+
+.hero-cta { margin-top: 32px; display: flex; gap: 14px; flex-wrap: wrap; }
+
+.btn-prim {
+  padding: 13px 28px; border-radius: 8px;
+  background: var(--accent); color: #fff;
+  font-size: 13.5px; font-weight: 700;
+  border: none; cursor: pointer; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  box-shadow: 0 6px 24px var(--glow);
+  transition: background 0.2s, transform 0.18s, box-shadow 0.2s;
+}
+.btn-prim:hover { background: var(--accent-h); transform: translateY(-2px); box-shadow: 0 10px 32px var(--glow); }
+
+.btn-ghost {
+  padding: 13px 26px; border-radius: 8px;
+  background: transparent; color: var(--text-m);
+  font-size: 13.5px; font-weight: 500;
+  border: 1.5px solid var(--bl); cursor: pointer;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  transition: all 0.22s;
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+/* ── ROBOTIC ARM (realistic bent joints) ── */
+.deco-arm {
+  position: absolute; top: 20px; right: 20px; z-index: 11;
+  filter: drop-shadow(0 0 18px rgba(94,173,247,0.4));
+}
+/* Joint animations with bent arm resting pose */
+.arm-seg-1 { transform-origin: 80px 200px; animation: seg1 6s ease-in-out infinite; }
+.arm-seg-2 { transform-origin: 80px 148px; animation: seg2 6s ease-in-out infinite; }
+.arm-seg-3 { transform-origin: 80px 100px; animation: seg3 5s ease-in-out infinite; }
+.arm-gripper { transform-origin: 80px 62px; animation: grip 4s ease-in-out infinite; }
+@keyframes seg1  { 0%,100%{transform:rotate(-8deg)} 50%{transform:rotate(4deg)} }
+@keyframes seg2  { 0%,100%{transform:rotate(18deg)} 50%{transform:rotate(-10deg)} }
+@keyframes seg3  { 0%,100%{transform:rotate(-12deg)} 50%{transform:rotate(8deg)} }
+@keyframes grip  { 0%,100%{transform:rotate(0)} 50%{transform:rotate(-6deg)} }
+
+/* ── DRONE FPV (realistic quadcopter) ── */
+.deco-drone {
+  position: absolute; bottom: 30px; left: 10px; z-index: 11;
+  animation: droneFloat 3.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 14px rgba(6,182,212,0.35));
+}
+@keyframes droneFloat { 0%,100%{transform:translateY(0) rotate(-1deg)} 50%{transform:translateY(-10px) rotate(1deg)} }
+.prop { transform-box: fill-box; transform-origin: center; }
+.p1,.p4 { animation: pspin 0.15s linear infinite; }
+.p2,.p3 { animation: pspin 0.15s linear infinite reverse; }
+@keyframes pspin { to { transform: rotate(360deg); } }
+
+/* ── PHOTO ORBIT ── */
+.photo-wrap { position: relative; z-index: 12; }
+.photo-orbit {
+  position: relative; width: 360px; height: 360px;
+  display: flex; align-items: center; justify-content: center;
+}
+.o-ring { position: absolute; inset: 0; border-radius: 50%; }
+.o-ring-1 { border: 1.5px solid rgba(94,173,247,0.55); animation: spin 8s linear infinite; }
+.o-ring-2 { inset: 22px; border: 1px solid rgba(6,182,212,0.3); animation: spin 13s linear infinite reverse; }
+.o-ring-3 { inset: 44px; border: 1px dashed rgba(255,255,255,0.1); animation: spin 20s linear infinite; }
+.o-ring-1::before {
+  content:''; position:absolute; top:-5px; left:50%; transform:translateX(-50%);
+  width:9px; height:9px; border-radius:50%; background:#5eadf7;
+  box-shadow:0 0 18px 7px rgba(94,173,247,0.9);
+}
+.o-ring-2::after {
+  content:''; position:absolute; bottom:-4px; right:18%;
+  width:5px; height:5px; border-radius:50%; background:var(--accent2);
+  box-shadow:0 0 12px 5px rgba(6,182,212,0.8);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.photo-frame {
+  width: 270px; height: 270px; border-radius: 50%; overflow: hidden;
+  border: 2.5px solid rgba(94,173,247,0.55);
+  background: #091d3d;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+  box-shadow: 0 0 60px rgba(29,78,216,0.55), inset 0 0 30px rgba(29,78,216,0.1);
+}
+.photo-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+.photo-ph {
+  color: rgba(255,255,255,0.25); font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  text-align: center; padding: 20px; line-height: 2;
+  flex-direction: column; align-items: center; justify-content: center;
+  width: 100%; height: 100%;
+}
+
+/* ══════════════════════════════════════
+   SECTION BACKGROUNDS — continuous flow
+   ══════════════════════════════════════ */
+#projects { background: #f0f4fb; }
+#skills   { background: linear-gradient(180deg, #f0f4fb 0%, #ffffff 100%); }
+#contact  { background: #f0f4fb; }
+
+/* Section wrapper */
+.sw { max-width: 1100px; margin: 0 auto; padding: 96px 60px; }
+.sl { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.2em; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; }
+.st { font-size: clamp(26px, 3vw, 40px); font-weight: 800; letter-spacing: -0.025em; line-height: 1.05; color: var(--text-d); }
+.st span { color: var(--accent); }
+.sb { width: 44px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent2)); margin: 14px 0 46px; }
+
+/* Smooth section dividers using gradient fades */
+.section-fade-down {
+  height: 80px;
+  background: linear-gradient(180deg, #ffffff 0%, #f0f4fb 100%);
+}
+.section-fade-up {
+  height: 80px;
+  background: linear-gradient(180deg, #f0f4fb 0%, #ffffff 100%);
+}
+
+/* ── ABOUT — layered above hero's white bottom fade ── */
+#about {
+  background: #ffffff;
+  position: relative;
+  z-index: 10;
+}
+
+/* ── ABOUT ── */
+.ag { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+.at p { font-size: 15px; color: var(--text-m); line-height: 1.9; margin-bottom: 18px; }
+.at strong { color: var(--text-d); font-weight: 600; }
+.ast { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 34px; }
+.stc {
+  background: var(--off); border: 1px solid var(--bl);
+  border-radius: 12px; padding: 18px 14px; text-align: center;
+  transition: border-color 0.22s, transform 0.18s;
+}
+.stc:hover { border-color: var(--accent); transform: translateY(-3px); }
+.stn { font-size: 20px; font-weight: 800; color: var(--accent); }
+.stl { font-size: 11.5px; color: var(--text-dim); margin-top: 5px; line-height: 1.45; }
+
+.ar { display: flex; flex-direction: column; gap: 12px; }
+.ir {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--off); border: 1px solid var(--bl);
+  border-radius: 12px; padding: 16px 20px; transition: border-color 0.22s;
+}
+.ir:hover { border-color: rgba(29,78,216,0.35); }
+.ii { font-size: 16px; margin-top: 1px; flex-shrink: 0; }
+.il { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-dim); letter-spacing:0.08em; text-transform:uppercase; }
+.iv { font-size: 14px; color: var(--text-d); font-weight: 600; margin-top: 3px; }
+
+/* ── PROJECTS ── */
+.pc {
+  display: grid; grid-template-columns: 1.1fr 1fr;
+  gap: 48px; align-items: center;
+  background: var(--white); border: 1px solid var(--bl);
+  border-radius: 18px; padding: 40px;
+  box-shadow: 0 4px 32px rgba(29,78,216,0.06);
+  transition: box-shadow 0.3s;
+}
+.pc:hover { box-shadow: 0 12px 48px rgba(29,78,216,0.12); }
+.pi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pis { border-radius: 10px; overflow: hidden; background: var(--off); border: 1px solid var(--bl); display: flex; align-items: center; justify-content: center; }
+.pis:first-child { grid-column: span 2; aspect-ratio: 16/10; }
+.pis:not(:first-child) { aspect-ratio: 4/3; }
+.pis img { width:100%; height:100%; object-fit:cover; display:block; }
+.iph { font-size:11px; color:var(--text-dim); font-family:'JetBrains Mono',monospace; text-align:center; padding:14px; line-height:1.75; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%; display:flex; }
+.pb { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: 0.07em; padding: 4px 12px; border-radius: 4px; background: rgba(29,78,216,0.07); border: 1px solid rgba(29,78,216,0.22); color: var(--accent); margin-bottom: 16px; }
+.pt { font-size: 21px; font-weight: 800; color: var(--text-d); margin-bottom: 12px; letter-spacing: -0.015em; }
+.pd { font-size: 14px; color: var(--text-m); line-height: 1.82; margin-bottom: 22px; }
+.fl { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.fl li { font-size: 13.5px; color: var(--text-m); display: flex; align-items: flex-start; gap: 10px; line-height: 1.55; }
+.fl li::before { content: '→'; color: var(--accent); flex-shrink: 0; font-weight: 700; }
+
+/* ── SKILLS ── */
+.skg { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.skc {
+  background: var(--off); border: 1px solid var(--bl);
+  border-radius: 12px; padding: 22px 20px;
+  display: flex; align-items: flex-start; gap: 14px;
+  transition: border-color 0.22s, transform 0.18s, box-shadow 0.22s;
+}
+.skc:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(29,78,216,0.08); }
+.ski { width: 38px; height: 38px; border-radius: 9px; background: rgba(29,78,216,0.09); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.skn { font-size: 14px; font-weight: 700; color: var(--text-d); }
+.sks { font-size: 12px; color: var(--text-dim); margin-top: 4px; line-height: 1.55; }
+
+/* ── CONTACT ── */
+.ci { font-size: 15px; color: var(--text-m); max-width: 480px; margin-bottom: 34px; line-height: 1.8; }
+.cg { display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+.cc {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--white); border: 1px solid var(--bl);
+  border-radius: 12px; padding: 20px 24px;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.22s, transform 0.18s, box-shadow 0.22s;
+}
+.cc:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(29,78,216,0.08); }
+.ciw { width: 40px; height: 40px; border-radius: 10px; background: rgba(29,78,216,0.08); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.ct { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text-dim); letter-spacing:0.08em; text-transform:uppercase; }
+.cv { font-size: 14px; color: var(--text-d); font-weight: 600; margin-top: 3px; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--dark);
+  color: rgba(255,255,255,0.38);
+  padding: 30px 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+footer p { font-size: 13px; }
+.bt { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.38); text-decoration: none; transition: color 0.2s; }
+.bt:hover { color: rgba(255,255,255,0.8); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  nav { padding: 0 24px; }
+  .nav-links { gap: 20px; }
+  .hero-inner { flex-direction: column; }
+  .hero-left, .hero-right { flex: none; max-width: 100%; width: 100%; padding: 60px 28px; }
+  .sw { padding: 64px 24px; }
+  .ag { grid-template-columns: 1fr; gap: 40px; }
+  .pc { grid-template-columns: 1fr; }
+  .skg { grid-template-columns: 1fr 1fr; }
+  .cg { grid-template-columns: 1fr; }
+  footer { padding: 22px 24px; flex-direction: column; gap: 10px; }
+}
+@media (max-width: 560px) {
+  .skg { grid-template-columns: 1fr; }
+  .ast { grid-template-columns: 1fr 1fr; }
+  .photo-orbit { width: 280px; height: 280px; }
+  .photo-frame { width: 210px; height: 210px; }
+  .deco-arm, .deco-drone { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">Dipanshu <span>Kale</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-circuit"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-inner">
+
+    <!-- LEFT -->
+    <div class="hero-left">
+      <div class="hero-tag rev">Mechanical Engineering Student</div>
+      <h1 class="hero-name rev d1">Dipanshu<br><span class="blue">Kale</span></h1>
+      <div class="hero-role rev d2">
+        <div class="hero-pip"></div>
+        MIT Academy of Engineering (MIT-AOE)
+      </div>
+      <div class="hero-bar rev d2"></div>
+      <p class="hero-desc rev d3">
+        Passionate about Robotics, Automation, Drone Technology and Product Design. Focused on building practical engineering solutions through hands-on projects and continuous learning.
+      </p>
+      <div class="hero-cta rev d4">
+        <a href="#" class="btn-prim">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          View Resume
+        </a>
+        <a href="#contact" class="btn-ghost">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+          Get in Touch
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="hero-right">
+
+      <!-- REALISTIC ROBOTIC ARM with bent joints -->
+      <svg class="deco-arm" width="170" height="220" viewBox="0 0 160 220" fill="none"
+           xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="armGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#4a8fd4" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#7ec8f7" stop-opacity="0.7"/>
+          </linearGradient>
+          <filter id="armGlow">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- BASE PLATE -->
+        <rect x="50" y="200" width="60" height="14" rx="7" fill="rgba(94,173,247,0.15)" stroke="rgba(94,173,247,0.5)" stroke-width="1.2"/>
+        <rect x="60" y="193" width="40" height="10" rx="4" fill="rgba(94,173,247,0.12)" stroke="rgba(94,173,247,0.45)" stroke-width="1"/>
+        <!-- Base rotation joint -->
+        <circle cx="80" cy="193" r="10" fill="rgba(29,78,216,0.3)" stroke="rgba(94,173,247,0.7)" stroke-width="1.5"/>
+        <circle cx="80" cy="193" r="5" fill="rgba(94,173,247,0.4)" stroke="rgba(94,173,247,0.9)" stroke-width="1"/>
+
+        <!-- SEGMENT 1 — lower arm (angled) -->
+        <g class="arm-seg-1">
+          <!-- Arm tube with thickness -->
+          <rect x="73" y="148" width="14" height="47" rx="7" fill="rgba(29,78,216,0.25)" stroke="rgba(94,173,247,0.6)" stroke-width="1.2"/>
+          <!-- Highlight -->
+          <rect x="76" y="150" width="4" height="42" rx="2" fill="rgba(255,255,255,0.12)"/>
+          <!-- Upper joint -->
+          <circle cx="80" cy="148" r="10" fill="rgba(29,78,216,0.35)" stroke="rgba(94,173,247,0.7)" stroke-width="1.5"/>
+          <circle cx="80" cy="148" r="5" fill="rgba(94,173,247,0.4)" stroke="rgba(94,173,247,0.9)" stroke-width="1"/>
+
+          <!-- SEGMENT 2 — upper arm (bent left ~20°) -->
+          <g class="arm-seg-2">
+            <!-- Bent arm tube -->
+            <rect x="73" y="100" width="14" height="50" rx="7" fill="rgba(29,78,216,0.28)" stroke="rgba(94,173,247,0.65)" stroke-width="1.2"/>
+            <rect x="76" y="102" width="4" height="45" rx="2" fill="rgba(255,255,255,0.12)"/>
+            <!-- Cable detail -->
+            <line x1="77" y1="102" x2="77" y2="145" stroke="rgba(6,182,212,0.35)" stroke-width="0.8" stroke-dasharray="3 4"/>
+            <!-- Elbow joint -->
+            <circle cx="80" cy="100" r="9" fill="rgba(29,78,216,0.35)" stroke="rgba(94,173,247,0.7)" stroke-width="1.5"/>
+            <circle cx="80" cy="100" r="4.5" fill="rgba(94,173,247,0.4)" stroke="rgba(94,173,247,0.9)" stroke-width="1"/>
+
+            <!-- SEGMENT 3 — forearm -->
+            <g class="arm-seg-3">
+              <rect x="74" y="60" width="12" height="42" rx="6" fill="rgba(29,78,216,0.3)" stroke="rgba(94,173,247,0.65)" stroke-width="1.2"/>
+              <rect x="77" y="62" width="3.5" height="38" rx="1.5" fill="rgba(255,255,255,0.12)"/>
+              <circle cx="80" cy="60" r="8" fill="rgba(29,78,216,0.35)" stroke="rgba(94,173,247,0.7)" stroke-width="1.4"/>
+              <circle cx="80" cy="60" r="4" fill="rgba(94,173,247,0.4)" stroke="rgba(94,173,247,0.9)" stroke-width="1"/>
+
+              <!-- GRIPPER WRIST -->
+              <g class="arm-gripper">
+                <rect x="74" y="38" width="12" height="24" rx="5" fill="rgba(29,78,216,0.28)" stroke="rgba(94,173,247,0.6)" stroke-width="1.2"/>
+                <circle cx="80" cy="38" r="7" fill="rgba(29,78,216,0.3)" stroke="rgba(94,173,247,0.65)" stroke-width="1.3"/>
+                <!-- Gripper fingers -->
+                <line x1="73" y1="30" x2="62" y2="14" stroke="rgba(94,173,247,0.75)" stroke-width="3.5" stroke-linecap="round"/>
+                <line x1="87" y1="30" x2="98" y2="14" stroke="rgba(94,173,247,0.75)" stroke-width="3.5" stroke-linecap="round"/>
+                <!-- Finger tips -->
+                <rect x="56" y="9" width="12" height="7" rx="3.5" fill="rgba(94,173,247,0.5)" stroke="rgba(94,173,247,0.8)" stroke-width="1"/>
+                <rect x="92" y="9" width="12" height="7" rx="3.5" fill="rgba(94,173,247,0.5)" stroke="rgba(94,173,247,0.8)" stroke-width="1"/>
+                <!-- Sensor dot on claw -->
+                <circle cx="80" cy="20" r="2.5" fill="#06b6d4" opacity="0.9"/>
+              </g>
+            </g>
+          </g>
+        </g>
+
+        <!-- Status lights on base -->
+        <circle cx="66" cy="207" r="2" fill="#06b6d4" opacity="0.8"/>
+        <circle cx="72" cy="207" r="2" fill="#22c55e" opacity="0.7"/>
+      </svg>
+
+      <!-- REALISTIC FPV QUADCOPTER DRONE -->
+      <svg class="deco-drone" width="200" height="160" viewBox="0 0 200 160" fill="none"
+           xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3a6fd8" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#0a1f50" stop-opacity="0.6"/>
+          </linearGradient>
+          <filter id="droneGlow">
+            <feGaussianBlur stdDeviation="1.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        <!-- ARMS — X-frame style -->
+        <!-- FR arm -->
+        <line x1="100" y1="82" x2="158" y2="46" stroke="rgba(94,173,247,0.7)" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- FL arm -->
+        <line x1="100" y1="82" x2="42" y2="46" stroke="rgba(94,173,247,0.7)" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- RR arm -->
+        <line x1="100" y1="90" x2="158" y2="126" stroke="rgba(94,173,247,0.7)" stroke-width="3.5" stroke-linecap="round"/>
+        <!-- RL arm -->
+        <line x1="100" y1="90" x2="42" y2="126" stroke="rgba(94,173,247,0.7)" stroke-width="3.5" stroke-linecap="round"/>
+
+        <!-- ARM BRACES -->
+        <line x1="100" y1="85" x2="158" y2="46" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+        <line x1="100" y1="85" x2="42" y2="46" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+        <!-- MAIN BODY — elongated FPV style -->
+        <rect x="82" y="70" width="36" height="32" rx="9" fill="url(#bodyGrad)" stroke="rgba(94,173,247,0.55)" stroke-width="1.5"/>
+        <!-- Body detail — battery hump -->
+        <rect x="87" y="73" width="26" height="12" rx="4" fill="rgba(255,255,255,0.06)" stroke="rgba(94,173,247,0.3)" stroke-width="0.8"/>
+        <!-- Carbon fiber texture hint -->
+        <line x1="86" y1="78" x2="114" y2="78" stroke="rgba(255,255,255,0.07)" stroke-width="0.6"/>
+        <line x1="86" y1="82" x2="114" y2="82" stroke="rgba(255,255,255,0.07)" stroke-width="0.6"/>
+        <line x1="86" y1="86" x2="114" y2="86" stroke="rgba(255,255,255,0.07)" stroke-width="0.6"/>
+        <line x1="86" y1="90" x2="114" y2="90" stroke="rgba(255,255,255,0.07)" stroke-width="0.6"/>
+        <!-- FC board outline -->
+        <rect x="90" y="87" width="20" height="11" rx="2" fill="rgba(29,78,216,0.18)" stroke="rgba(94,173,247,0.3)" stroke-width="0.7"/>
+
+        <!-- CAMERA MOUNT — front FPV cam -->
+        <rect x="90" y="63" width="20" height="14" rx="5" fill="rgba(255,255,255,0.07)" stroke="rgba(94,173,247,0.5)" stroke-width="1"/>
+        <circle cx="100" cy="70" r="5" fill="rgba(6,182,212,0.15)" stroke="rgba(6,182,212,0.7)" stroke-width="1"/>
+        <circle cx="100" cy="70" r="2.5" fill="rgba(6,182,212,0.5)"/>
+        <!-- Camera lens glint -->
+        <circle cx="101.5" cy="68.5" r="1" fill="rgba(255,255,255,0.6)"/>
+
+        <!-- MOTOR HUBS -->
+        <circle cx="158" cy="46" r="9" fill="rgba(29,78,216,0.3)" stroke="rgba(94,173,247,0.6)" stroke-width="1.3"/>
+        <circle cx="158" cy="46" r="4.5" fill="rgba(94,173,247,0.35)" stroke="rgba(94,173,247,0.8)" stroke-width="1"/>
+        <circle cx="42" cy="46" r="9" fill="rgba(29,78,216,0.3)" stroke="rgba(94,173,247,0.6)" stroke-width="1.3"/>
+        <circle cx="42" cy="46" r="4.5" fill="rgba(94,173,247,0.35)" stroke="rgba(94,173,247,0.8)" stroke-width="1"/>
+        <circle cx="158" cy="126" r="9" fill="rgba(29,78,216,0.3)" stroke="rgba(94,173,247,0.6)" stroke-width="1.3"/>
+        <circle cx="158" cy="126" r="4.5" fill="rgba(94,173,247,0.35)" stroke="rgba(94,173,247,0.8)" stroke-width="1"/>
+        <circle cx="42" cy="126" r="9" fill="rgba(29,78,216,0.3)" stroke="rgba(94,173,247,0.6)" stroke-width="1.3"/>
+        <circle cx="42" cy="126" r="4.5" fill="rgba(94,173,247,0.35)" stroke="rgba(94,173,247,0.8)" stroke-width="1"/>
+
+        <!-- PROPELLERS — thin blades, realistic -->
+        <!-- FR props -->
+        <g class="prop p1">
+          <ellipse cx="158" cy="46" rx="24" ry="4" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.45)" stroke-width="0.8"/>
+        </g>
+        <!-- FL props -->
+        <g class="prop p2">
+          <ellipse cx="42" cy="46" rx="24" ry="4" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.45)" stroke-width="0.8"/>
+        </g>
+        <!-- RR props -->
+        <g class="prop p3">
+          <ellipse cx="158" cy="126" rx="24" ry="4" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.45)" stroke-width="0.8"/>
+        </g>
+        <!-- RL props -->
+        <g class="prop p4">
+          <ellipse cx="42" cy="126" rx="24" ry="4" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.45)" stroke-width="0.8"/>
+        </g>
+
+        <!-- LED indicators -->
+        <circle cx="158" cy="46" r="2" fill="#22c55e" opacity="0.9"/>
+        <circle cx="42" cy="46" r="2" fill="#22c55e" opacity="0.9"/>
+        <circle cx="158" cy="126" r="2" fill="#ef4444" opacity="0.8"/>
+        <circle cx="42" cy="126" r="2" fill="#ef4444" opacity="0.8"/>
+
+        <!-- Video TX antenna -->
+        <line x1="106" y1="68" x2="112" y2="56" stroke="rgba(94,173,247,0.5)" stroke-width="1" stroke-linecap="round"/>
+        <circle cx="112" cy="54" r="2" fill="rgba(94,173,247,0.4)" stroke="rgba(94,173,247,0.7)" stroke-width="0.8"/>
+      </svg>
+
+      <!-- Photo orbit -->
+      <div class="photo-wrap rev d2">
+        <div class="photo-orbit">
+          <div class="o-ring o-ring-1"></div>
+          <div class="o-ring o-ring-2"></div>
+          <div class="o-ring o-ring-3"></div>
+          <div class="photo-frame">
+            <!--
+              ══ ADD YOUR PHOTO ══════════════════════
+              Replace src="" with your image path.
+              e.g. src="photo.jpg"  or  src="images/me.png"
+              ════════════════════════════════════════
+            -->
+            <img src=""
+                 alt="Dipanshu Kale"
+                 id="hero-photo"
+                 onerror="this.style.display='none';document.getElementById('pph').style.display='flex';">
+            <div class="photo-ph" id="pph" style="display:flex;">
+              Add your photo<br>via <span style="color:#5eadf7">src=""</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /hero-right -->
+  </div><!-- /hero-inner -->
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="sw">
+    <div class="sl rev">About</div>
+    <h2 class="st rev d1">Who I <span>Am</span></h2>
+    <div class="sb rev d1"></div>
+    <div class="ag">
+      <div class="at">
+        <p class="rev d2">I'm a first-year Mechanical Engineering student at MIT Academy of Engineering with a strong pull toward embedded systems, robotics, and automation. I believe the most compelling engineering happens at the intersection of hardware, electronics, and code.</p>
+        <p class="rev d3">As an active member of the <strong>Drone Club at MIT-AOE</strong>, I collaborate on UAV design, autonomous flight systems, and control electronics alongside like-minded engineers.</p>
+        <p class="rev d4">My goal is to build systems that are reliable, intelligent, and built for the real world — starting with hands-on projects and growing through every iteration.</p>
+        <div class="ast">
+          <div class="stc rev d2"><div class="stn">1+</div><div class="stl">Built Projects</div></div>
+          <div class="stc rev d3"><div class="stn">MIT-AOE</div><div class="stl">Drone Club</div></div>
+          <div class="stc rev d4"><div class="stn">Arduino</div><div class="stl">Primary Platform</div></div>
+        </div>
+      </div>
+      <div class="ar">
+        <div class="ir rev d2"><div class="ii">🎓</div><div><div class="il">Institution</div><div class="iv">MIT Academy of Engineering, Pune</div></div></div>
+        <div class="ir rev d3"><div class="ii">📘</div><div><div class="il">Degree</div><div class="iv">B.E. Mechanical Engineering</div></div></div>
+        <div class="ir rev d3"><div class="ii">📍</div><div><div class="il">Location</div><div class="iv">Pune, Maharashtra, India</div></div></div>
+        <div class="ir rev d4"><div class="ii">🤝</div><div><div class="il">Club</div><div class="iv">Drone Club — MIT-AOE</div></div></div>
+        <div class="ir rev d5"><div class="ii">🔍</div><div><div class="il">Interests</div><div class="iv">Embedded Systems · Robotics · Automation · R&D</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sw">
+    <div class="sl rev">Projects</div>
+    <h2 class="st rev d1">What I've <span>Built</span></h2>
+    <div class="sb rev d1"></div>
+    <div class="pc rev d2">
+      <div class="pi">
+        <!--
+          ══ ROBOT IMAGES ════════════════════════
+          Replace each src="" with your image path.
+          src="robot1.jpg" / src="robot2.jpg" / src="robot3.jpg"
+          ════════════════════════════════════════
+        -->
+        <div class="pis">
+          <img src="" alt="Robot overview"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="iph">Robot Image 1<br><span style="opacity:.45">src=""</span></div>
+        </div>
+        <div class="pis">
+          <img src="" alt="Robot internals"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="iph">Robot Image 2<br><span style="opacity:.45">src=""</span></div>
+        </div>
+        <div class="pis">
+          <img src="" alt="Robot in use"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div class="iph">Robot Image 3<br><span style="opacity:.45">src=""</span></div>
+        </div>
+      </div>
+      <div class="rev d3">
+        <div class="pb">✦ Featured Project</div>
+        <div class="pt">Smart Grass-Cutting &amp; Water Sprinkler Robot</div>
+        <p class="pd">An Arduino-based dual-function robot designed to automate lawn maintenance. It combines a grass-cutting mechanism with an on-board water sprinkler, all controlled wirelessly from a smartphone — reducing manual effort while conserving water.</p>
+        <ul class="fl">
+          <li>Wireless smartphone control via Bluetooth</li>
+          <li>Integrated water pump with 360° rotating sprinkler head</li>
+          <li>4-wheel drive chassis built for outdoor terrain</li>
+          <li>Dual-function: grass cutting + water sprinkling in one unit</li>
+          <li>Designed for safety, comfort, and greener environments</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="sw">
+    <div class="sl rev">Skills</div>
+    <h2 class="st rev d1">Technical <span>Skills</span></h2>
+    <div class="sb rev d1"></div>
+    <div class="skg">
+      <div class="skc rev d2"><div class="ski">⚙️</div><div><div class="skn">Arduino &amp; Embedded C</div><div class="sks">Microcontroller programming, sensor integration, motor control</div></div></div>
+      <div class="skc rev d3"><div class="ski">🤖</div><div><div class="skn">Robotics &amp; Automation</div><div class="sks">Autonomous systems, control logic, actuator design</div></div></div>
+      <div class="skc rev d4"><div class="ski">✏️</div><div><div class="skn">CAD Design</div><div class="sks">SolidWorks — 3D modelling, mechanical assemblies</div></div></div>
+      <div class="skc rev d2"><div class="ski">🔌</div><div><div class="skn">Circuit Design &amp; Prototyping</div><div class="sks">PCB layout basics, breadboard prototyping, wiring</div></div></div>
+      <div class="skc rev d3"><div class="ski">🚁</div><div><div class="skn">UAV &amp; Drone Systems</div><div class="sks">Drone Club MIT-AOE — flight systems, frame design</div></div></div>
+      <div class="skc rev d4"><div class="ski">🔧</div><div><div class="skn">Mechanical Design</div><div class="sks">Manufacturing processes, material selection, tolerances</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="sw">
+    <div class="sl rev">Contact</div>
+    <h2 class="st rev d1">Let's <span>Connect</span></h2>
+    <div class="sb rev d1"></div>
+    <p class="ci rev d2">Open to internships, collaborations, and engineering opportunities. Feel free to reach out through any of the channels below.</p>
+    <div class="cg">
+      <a href="tel:+919173574150" class="cc rev d2"><div class="ciw">📞</div><div><div class="ct">Phone</div><div class="cv">+91 91735 74150</div></div></a>
+      <a href="mailto:dipanshu.s.kale@gmail.com" class="cc rev d3"><div class="ciw">✉️</div><div><div class="ct">Email</div><div class="cv">dipanshu.s.kale@gmail.com</div></div></a>
+      <a href="https://linkedin.com/in/dipanshu-kale-274b88415" target="_blank" class="cc rev d4"><div class="ciw">💼</div><div><div class="ct">LinkedIn</div><div class="cv">dipanshu-kale-274b88415</div></div></a>
+      <a href="https://github.com/dipanshuskale-cpu" target="_blank" class="cc rev d5"><div class="ciw">⚙️</div><div><div class="ct">GitHub</div><div class="cv">dipanshuskale-cpu</div></div></a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Dipanshu Kale. All Rights Reserved.</p>
+  <a href="#hero" class="bt">↑ back to top</a>
+</footer>
+
+<script>
+/* Scroll reveal */
+const revEls = document.querySelectorAll('.rev');
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('on'); ro.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+revEls.forEach(el => ro.observe(el));
+
+/* Hero elements visible immediately */
+document.querySelectorAll('#hero .rev').forEach((el, i) => {
+  setTimeout(() => el.classList.add('on'), 60 + i * 80);
+});
+
+/* Nav shadow */
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), { passive: true });
+
+/* Smooth scroll */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+
+/* Photo fallback */
+const img = document.getElementById('hero-photo');
+if (img && !img.getAttribute('src')) {
+  img.style.display = 'none';
+  document.getElementById('pph').style.display = 'flex';
+}
+</script>
+</body>
+</html>
